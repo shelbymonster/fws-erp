@@ -3,34 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Management</title>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <title>Customers - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
 </head>
 <body>
     <header>
-        <h1>Customer Management</h1>
+        <div class="container">
+            <h1>Customer Management</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
     </header>
-    <main>
-        <section id="customer-form">
-            <h2>Add New Customer</h2>
-            <form id="add-customer-form">
-                <label for="customer-name">Name:</label>
-                <input type="text" id="customer-name" required>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link active">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="employees.html" class="nav-link">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+        <!-- Page Actions -->
+        <nav>
+            <a href="#" class="button" onclick="showAddCustomerForm()">Add New Customer</a>
+            <button class="button button-success" onclick="exportCustomersToCSV()">Export CSV</button>
+        </nav>
+
+        <main>
+            <!-- Customer List View -->
+            <div id="customer-list-view">
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="customerSearchInput" class="search-input" placeholder="Search customers by name, email, or phone..." oninput="searchCustomers()">
+                    <span class="search-icon"></span>
+                    <button class="search-clear" id="customerSearchClear" onclick="clearCustomerSearch()">×</button>
+                </div>
                 
-                <label for="customer-email">Email:</label>
-                <input type="email" id="customer-email" required>
+                <h2>Customers</h2>
                 
-                <label for="customer-phone">Phone:</label>
-                <input type="tel" id="customer-phone" required>
-                
-                <button type="submit">Add Customer</button>
-            </form>
-        </section>
-        <section id="customer-list">
-            <h2>Customer List</h2>
-            <ul id="customers"></ul>
-        </section>
-    </main>
-    <script src="../public/js/main.js"></script>
+                <div class="vendor-list-container">
+                    <div class="vendor-list-container">
+                        <div id="customers-list">
+                            <!-- Customer names will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="vendor-profile-container">
+                        <div id="customer-profile-empty" class="vendor-profile-empty">
+                            <p>Select a customer to view details</p>
+                        </div>
+                        
+                        <div id="customer-profile" class="vendor-profile hidden">
+                            <!-- Customer profile will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Customer Form Modal -->
+            <div id="customer-form-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="hideCustomerForm()">&times;</span>
+                    <h3 id="customer-form-title">Add New Customer</h3>
+                    <form id="customer-form" onsubmit="saveCustomer(event)">
+                        <div class="form-group">
+                            <label for="customerName">Customer Name *</label>
+                            <input type="text" id="customerName" required class="form-input" oninput="autoGenerateCustomerId()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerId">Customer ID *</label>
+                            <input type="text" id="customerId" required class="form-input" placeholder="Auto-generated or enter manually">
+                            <small style="color: #666; font-size: 12px;">4-5 letter code (auto-generated from name or enter manually)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerEmail">Email Address *</label>
+                            <input type="email" id="customerEmail" required class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number</label>
+                            <input type="tel" id="customerPhone" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerContact">Contact Name</label>
+                            <input type="text" id="customerContact" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerAddress">Street Address</label>
+                            <textarea id="customerAddress" class="form-input" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="button" id="customer-form-submit">Add Customer</button>
+                            <button type="button" class="button cancel-button" onclick="hideCustomerForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/export-utility.js"></script>
+    <script src="../js/customers.js"></script>
+    <script src="../js/customer-notes-enhancement.js"></script>
 </body>
 </html>

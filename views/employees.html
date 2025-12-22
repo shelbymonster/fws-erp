@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Employee Management</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="employees.html" class="nav-link active">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+        <!-- Page Actions -->
+        <nav class="nav-buttons">
+            <a href="#" class="button" onclick="showAddEmployeeForm()">Add New Employee</a>
+        </nav>
+
+        <main>
+            <!-- Employee List View -->
+            <div id="employee-list-view">
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="employeeSearchInput" class="search-input" placeholder="Search employees by name, email, or department..." oninput="searchEmployees()">
+                    <span class="search-icon"></span>
+                    <button class="search-clear" id="employeeSearchClear" onclick="clearEmployeeSearch()">×</button>
+                </div>
+                
+                <h2>Employees</h2>
+                
+                <div class="vendor-list-container">
+                    <div class="vendor-list-container">
+                        <div id="employees-list">
+                            <!-- Employee names will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="vendor-profile-container">
+                        <div id="employee-profile-empty" class="vendor-profile-empty">
+                            <p>Select an employee to view details</p>
+                        </div>
+                        
+                        <div id="employee-profile" class="vendor-profile hidden">
+                            <!-- Employee profile will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Employee Form Modal -->
+            <div id="employee-form-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="hideEmployeeForm()">&times;</span>
+                    <h3 id="employee-form-title">Add New Employee</h3>
+                    <form id="employee-form" onsubmit="saveEmployee(event)">
+                        <div class="form-group">
+                            <label for="employeeFirstName">First Name *</label>
+                            <input type="text" id="employeeFirstName" required class="form-input" oninput="autoGenerateEmployeeId()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="employeeLastName">Last Name *</label>
+                            <input type="text" id="employeeLastName" required class="form-input" oninput="autoGenerateEmployeeId()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="employeeId">Employee ID *</label>
+                            <input type="text" id="employeeId" required class="form-input" placeholder="Auto-generated or enter manually">
+                            <small style="color: #666; font-size: 12px;">First letter of first name + first 2 letters of last name (e.g., JSM)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="employeeEmail">Email Address</label>
+                            <input type="email" id="employeeEmail" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="employeeDepartment">Department</label>
+                            <select id="employeeDepartment" class="form-input">
+                                <option value="">Select department (optional)...</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="IT">IT</option>
+                                <option value="Finance">Finance</option>
+                                <option value="HR">Human Resources</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="employeePosition">Position</label>
+                            <input type="text" id="employeePosition" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payType">Pay Type *</label>
+                            <select id="payType" required class="form-input" onchange="togglePayFields()">
+                                <option value="">Select pay type...</option>
+                                <option value="hourly">Hourly</option>
+                                <option value="salary">Salary</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payRate" id="payRateLabel">Pay Rate *</label>
+                            <input type="number" id="payRate" step="0.01" required class="form-input" placeholder="0.00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="hireDate">Hire Date *</label>
+                            <input type="date" id="hireDate" required class="form-input">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="button" id="employee-form-submit">Add Employee</button>
+                            <button type="button" class="button cancel-button" onclick="hideEmployeeForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/employees.js"></script>
+</body>
+</html>

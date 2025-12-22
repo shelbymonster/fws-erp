@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bills Management</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link active">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="employees.html" class="nav-link">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+        <!-- Page Actions -->
+        <nav class="nav-buttons">
+            <a href="vendors.html" class="button">Add Vendor</a>
+            <a href="#" class="button" onclick="showAddBillForm()">Add New Bill</a>
+        </nav>
+
+        <main>
+            <!-- Add Bill Modal -->
+            <div id="add-bill-form" class="bill-modal" style="display: none;">
+                <div class="bill-modal-content">
+                    <h3>Add New Bill</h3>
+                    <p class="helper-text-info"><strong>Tip:</strong> When you select "Inventory" as the category, you can choose a product from your inventory. The stock level will automatically increase when the bill is saved.</p>
+                    <form onsubmit="addBill(event)">
+                    <div class="form-row">
+                        <label>Vendor:</label>
+                        <select id="billVendor" required class="vendor-select">
+                            <option value="">Select a vendor...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Invoice Number:</label>
+                        <input type="text" id="billInvoiceNumber" placeholder="Vendor's invoice #" class="description-input">
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Bill Date:</label>
+                        <input type="date" id="billDate" required title="Bill Date - Date on vendor's invoice" class="description-input">
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Due Date:</label>
+                        <input type="date" id="billDueDate" required title="Due Date - When payment is due" class="description-input">
+                    </div>
+                    
+                    <div id="bill-items">
+                        <h4>Line Items <span class="tooltip-icon" data-tooltip="Select 'Inventory' to auto-update stock levels">?</span></h4>
+                        <div class="bill-item">
+                            <select class="item-category">
+                                <option value="">Category...</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Inventory">Inventory</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Other">Other</option>
+                                <option value="Professional Fees">Professional Fees</option>
+                                <option value="Rent">Rent</option>
+                                <option value="Services">Services</option>
+                                <option value="Subscriptions">Subscriptions</option>
+                                <option value="Supplies">Supplies</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Utilities">Utilities</option>
+                            </select>
+                            <select class="item-product hidden">
+                                <option value="">Select product...</option>
+                            </select>
+                            <input type="text" class="item-description" placeholder="Description">
+                            <input type="number" class="item-quantity" placeholder="Qty" min="1" value="1">
+                            <input type="number" class="item-cost" placeholder="Cost" step="0.01">
+                            <button type="button" onclick="removeBillItem(this)" class="remove-button">Remove</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="addBillItem()" class="button add-item-button">Add Item</button>
+                    
+                    <div id="bill-totals-preview" class="bill-totals-preview">
+                        <div class="bill-totals-preview-inner">
+                            <div class="bill-total-amount">
+                                Total: $<span id="bill-total">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-attachment">
+                        <label>Attach File (optional):</label>
+                        <input type="file" id="billAttachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                        <small class="file-help-text">Accepted: PDF, Images, Word documents</small>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>
+                            <input type="checkbox" id="billIsCredit" onchange="toggleCreditField()">
+                            This is a Vendor Credit
+                        </label>
+                        <small class="file-help-text">Check this box for refunds or credits from vendor. Enter the amount as a positive number - it will be automatically converted to a credit.</small>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>
+                            <input type="checkbox" id="billAlreadyPaid" onchange="togglePaymentFields()">
+                            Already Paid?
+                        </label>
+                    </div>
+                    
+                    <div id="bill-payment-fields" class="bill-payment-fields">
+                        <h4>Payment Information</h4>
+                        
+                        <div class="form-row">
+                            <label>Payment Type:</label>
+                            <select id="billPaymentType" class="vendor-select">
+                                <option value="">Select payment method...</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Check">Check</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="ACH/Wire">ACH/Wire</option>
+                                <option value="PayPal">PayPal</option>
+                                <option value="Venmo">Venmo</option>
+                                <option value="Zelle">Zelle</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Payment Date:</label>
+                            <input type="date" id="billPaymentDate" class="description-input">
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Reference/Check Number:</label>
+                            <input type="text" id="billPaymentReference" placeholder="Check #, Transaction ID, etc." class="description-input">
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Payment Notes:</label>
+                            <textarea id="billPaymentNotes" placeholder="Additional notes..." class="description-input bill-payment-notes"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" id="billSubmitButton" class="button">Add Bill</button>
+                        <button type="button" class="button cancel" onclick="hideAddBillForm()">Cancel</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+            <!-- Bills Summary -->
+            <div id="bills-summary" class="bills-summary">
+                <h3>Bills Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value unpaid">$<span id="total-unpaid">0.00</span></div>
+                        <div>Total Unpaid</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value due-week">$<span id="due-this-week">0.00</span></div>
+                        <div>Due This Week</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value overdue"><span id="overdue-count">0</span></div>
+                        <div>Overdue Bills</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value paid">$<span id="paid-this-month">0.00</span></div>
+                        <div>Paid This Month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bills List -->
+            <div id="bills-list">
+                <h2>Bills List</h2>
+                
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="billSearchInput" class="search-input" placeholder="Search bills by vendor, invoice #, or amount..." oninput="searchBills()">
+                    <span class="search-icon"></span>
+                    <button class="search-clear" id="billSearchClear" onclick="clearBillSearch()">×</button>
+                </div>
+                
+                <!-- Run Report Button -->
+                <div style="margin: 15px 0;">
+                    <button class="button button-primary" onclick="showBillReportDialog()">Run Report</button>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="button all" onclick="filterBills('all')">All</button>
+                    <button class="button overdue" onclick="filterBills('overdue')">Overdue</button>
+                    <button class="button paid" onclick="filterBills('paid')">Paid</button>
+                    <button class="button due-date" onclick="sortBillsByDueDate()">Sort by Due Date</button>
+                    <button class="button button-success" onclick="exportBillsToCSV()">Export CSV</button>
+                </div>
+                
+                <table class="table" id="bills-table">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Invoice #</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Bill Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Paid Date</th>
+                            <th>Attachment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bills-tbody">
+                        <!-- Bills will be added here -->
+                    </tbody>
+                </table>
+                
+                <!-- Pagination Controls -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing <span id="bill-start">0</span> to <span id="bill-end">0</span> of <span id="bill-total">0</span> bills
+                    </div>
+                    <div class="pagination-controls">
+                        <label for="billPageSize">Show:</label>
+                        <select id="billPageSize" onchange="changeBillPageSize()">
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="all">All</option>
+                        </select>
+                        <button class="button button-small" onclick="previousBillPage()" id="bill-prev-btn">Previous</button>
+                        <span id="bill-page-info">Page 1 of 1</span>
+                        <button class="button button-small" onclick="nextBillPage()" id="bill-next-btn">Next</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bill Report Dialog -->
+            <div id="bill-report-dialog" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Generate Bill Report</h3>
+                    <form onsubmit="generateBillReport(event)">
+                        <div class="form-row">
+                            <label>Sort By:</label>
+                            <select id="reportSortBy" required class="vendor-select">
+                                <option value="billDate">Bill Date</option>
+                                <option value="dueDate">Due Date</option>
+                                <option value="paidDate">Payment Date</option>
+                                <option value="vendor">Vendor Name</option>
+                                <option value="amount">Amount</option>
+                                <option value="status">Status</option>
+                                <option value="category">Category</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Sort Order:</label>
+                            <select id="reportSortOrder" required class="vendor-select">
+                                <option value="asc">Ascending (A-Z, Oldest-Newest, Low-High)</option>
+                                <option value="desc">Descending (Z-A, Newest-Oldest, High-Low)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Filter by Status:</label>
+                            <select id="reportStatusFilter" class="vendor-select">
+                                <option value="all">All Statuses</option>
+                                <option value="Unpaid">Unpaid (Pending + Overdue)</option>
+                                <option value="Pending">Pending Only</option>
+                                <option value="Paid">Paid Only</option>
+                                <option value="Overdue">Overdue Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Filter by Vendor:</label>
+                            <select id="reportVendorFilter" class="vendor-select">
+                                <option value="all">All Vendors</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Filter by Category:</label>
+                            <select id="reportCategoryFilter" class="vendor-select">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Date Range:</label>
+                            <select id="reportDateRange" class="vendor-select" onchange="toggleCustomDateRangeBills()">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div id="customDateRangeBills" style="display: none;">
+                            <div class="form-row">
+                                <label>Start Date:</label>
+                                <input type="date" id="reportStartDate" class="description-input">
+                                
+                                <label>End Date:</label>
+                                <input type="date" id="reportEndDate" class="description-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Report Format:</label>
+                            <select id="reportFormat" required class="vendor-select">
+                                <option value="csv">CSV (Excel)</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" class="button">Generate Report</button>
+                            <button type="button" class="button cancel" onclick="hideBillReportDialog()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/export-utility.js"></script>
+    <script src="../js/bills.js"></script>
+</body>
+</html>

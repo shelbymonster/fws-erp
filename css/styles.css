@@ -1,0 +1,2838 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+header {
+    background: #000000;
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+footer {
+    background: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.button {
+    display: inline-block;
+    font-size: 16px;
+    color: #000000;
+    background: #f5f5f5;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+}
+
+.button:hover {
+    background: #000000;
+    color: white;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.table th, .table td {
+    border: 1px solid #cccccc;
+    text-align: left;
+    padding: 8px;
+}
+
+.table th {
+    background-color: #f5f5f5;
+}
+
+/* Dashboard styles for better layout */
+.dashboard-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.dashboard-buttons .button {
+    display: block;
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.dashboard-buttons .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+main {
+    padding: 40px 0;
+    text-align: center;
+}
+
+main h2 {
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+main p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* Date fields container */
+.date-fields {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.date-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-field label {
+    font-weight: bold;
+    white-space: nowrap;
+    margin: 0;
+    display: inline-block;
+    width: 80px;
+}
+
+.date-field input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 150px;
+}
+
+/* General form styling improvements */
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row input, .form-row select {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-row label {
+    font-weight: bold;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.form-row .description-input {
+    width: 300px;
+}
+
+.form-row .amount-input {
+    width: 120px;
+}
+
+.form-row .vendor-select {
+    width: 220px;
+}
+
+/* Form container styling */
+.add-bill-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+/* Bill items styling */
+.bill-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.bill-item .item-category,
+.bill-item .item-product {
+    min-width: 200px;
+    flex-shrink: 0;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.bill-item .item-description {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.bill-item .item-quantity {
+    width: 80px;
+    flex-shrink: 0;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.bill-item .item-cost {
+    width: 120px;
+    flex-shrink: 0;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.bill-item .remove-button {
+    background: #f5f5f5;
+    color: #000000;
+    border: 1px solid #cccccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bill-item .remove-button:hover {
+    background: #000000;
+    color: white;
+}
+
+.bills-summary {
+    background: white;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.summary-item {
+    text-align: center;
+}
+
+.summary-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.summary-value.unpaid {
+    color: #000000;
+}
+
+.summary-value.due-week {
+    color: #666666;
+}
+
+.summary-value.overdue {
+    color: #000000;
+}
+
+.summary-value.paid {
+    color: #000000;
+}
+
+/* Navigation styling */
+.nav-buttons {
+    margin: 20px 0;
+}
+
+.filter-buttons {
+    margin-bottom: 15px;
+}
+
+.filter-buttons .button {
+    margin-right: 5px;
+}
+
+.filter-buttons .button.all {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.filter-buttons .button.overdue {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.filter-buttons .button.paid {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+/* File attachment styling */
+.file-attachment {
+    margin: 10px 0;
+}
+
+.file-attachment input {
+    padding: 8px;
+    width: 300px;
+}
+
+.file-help-text {
+    color: #666;
+    display: block;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+/* Button styling for forms */
+form .button {
+    margin: 10px 5px;
+    cursor: pointer;
+    background: #f5f5f5;
+    border: 1px solid #cccccc;
+    font-size: 16px;
+    color: #000000;
+}
+
+form .button:hover {
+    background: #000000;
+    color: white;
+}
+
+form .button.cancel {
+    background: #f5f5f5;
+    color: #000000;
+}
+
+form .button.cancel:hover {
+    background: #000000;
+    color: white;
+}
+
+/* Invoice specific styling */
+.create-invoice-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.invoices-summary {
+    background: white;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.invoice-item-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+    padding: 8px 0;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.invoice-item-header span:nth-child(1) {
+    width: 150px;
+    margin: 2px;
+    padding-left: 5px;
+}
+
+.invoice-item-header span:nth-child(2),
+.invoice-item-header span:nth-child(3),
+.invoice-item-header span:nth-child(4) {
+    width: 70px;
+    margin: 2px;
+    padding-left: 5px;
+}
+
+.invoice-item-header span:nth-child(5) {
+    width: 85px;
+    margin: 2px;
+    padding-left: 5px;
+}
+
+.invoice-item-header span:nth-child(6) {
+    width: 65px;
+}
+
+.invoice-item {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.invoice-item select {
+    margin: 2px;
+    padding: 5px;
+    width: 150px;
+}
+
+.invoice-item input {
+    margin: 2px;
+    padding: 5px;
+}
+
+.invoice-item .item-quantity-ordered,
+.invoice-item .item-quantity-backordered,
+.invoice-item .item-quantity,
+.invoice-item .item-quantity-received {
+    width: 70px;
+}
+
+.invoice-item .item-price {
+    width: 80px;
+}
+
+.invoice-item .remove-button {
+    background: #000000;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.invoice-item .remove-button:hover {
+    background: #333333;
+}
+
+.add-item-button {
+    background: #f5f5f5 !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+}
+
+.add-item-button:hover {
+    background: #000000 !important;
+    color: white !important;
+}
+
+.generate-pdf-option {
+    margin-left: 20px;
+}
+
+.sort-buttons .button.date-created {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.sort-buttons .button.due-date {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+/* Customer specific styling */
+.add-customer-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.customers-list {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.customer-notes-cell {
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.customer-notes-input {
+    width: 100%;
+    max-width: 180px;
+    padding: 4px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.customer-notes-counter {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+/* Vendor specific styling */
+.add-vendor-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.vendors-list {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+/* Payroll specific styling */
+.add-employee-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.process-payroll-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.payroll-summary {
+    background: white;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.calculation-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.calculation-row span {
+    background: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.net-pay {
+    text-align: center;
+    font-size: 18px;
+    color: #000000;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Reports specific styling */
+.reports-selection {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.report-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.report-category {
+    padding: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background: #f5f5f5;
+}
+
+.report-category h4 {
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.report-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.report-buttons .button {
+    margin: 0;
+    text-align: left;
+}
+
+.report-options {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.report-results {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.report-summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+}
+
+.report-stat-card {
+    text-align: center;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+}
+
+.report-stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.report-stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.report-totals {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    text-align: right;
+}
+
+.report-totals .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.report-totals .grand-total {
+    font-size: 18px;
+    color: #000000;
+    border-top: 2px solid #000000;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.employee-summary-report {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.employee-summary-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.employee-card {
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
+.employee-card h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.employee-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.employee-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.tax-summary-report {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.tax-summary-container {
+    margin-top: 20px;
+}
+
+.tax-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tax-card {
+    padding: 15px;
+    background: #f5f5f5;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.tax-card h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.tax-amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Vendor Management Styles */
+.vendor-list-container {
+    display: flex;
+    gap: 20px;
+    min-height: 600px;
+}
+
+.vendor-sidebar {
+    width: 300px;
+    background: white;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.vendor-sidebar h2 {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+#vendors-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.vendor-list-item {
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.vendor-list-item:hover {
+    background: #e8e8e8;
+    border-left-color: #000000;
+}
+
+.vendor-list-item.active {
+    background: #e0e0e0;
+    border-left-color: #000000;
+    font-weight: bold;
+}
+
+.vendor-profile-container {
+    flex: 1;
+    background: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.vendor-profile-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #999;
+    font-size: 18px;
+}
+
+.vendor-profile {
+    display: none;
+}
+
+.vendor-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #cccccc;
+}
+
+.vendor-profile-header h2 {
+    margin: 0;
+    color: #000000;
+    font-size: 28px;
+}
+
+.vendor-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.vendor-profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.vendor-info-section h3,
+.vendor-attachments-section h3 {
+    margin: 0 0 15px 0;
+    color: #000000;
+    font-size: 20px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+}
+
+.vendor-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.vendor-info-item {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.vendor-info-item label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.vendor-info-item p {
+    margin: 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.attachments-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.attachment-upload {
+    padding: 20px;
+    background: #f5f5f5;
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.no-attachments {
+    color: #999;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    border-left: 3px solid #000000;
+}
+
+.attachment-icon {
+    font-size: 24px;
+}
+
+.attachment-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.attachment-size {
+    color: #666;
+    font-size: 14px;
+}
+
+.button-small {
+    padding: 5px 10px;
+    font-size: 14px;
+    background: #f5f5f5;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    cursor: pointer;
+    min-width: 75px;
+    height: 30px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.button-small:hover {
+    background: #000000;
+    color: white;
+}
+
+.delete-attachment {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    color: #000000;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.cancel-button {
+    background: #f5f5f5 !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+}
+
+.cancel-button:hover {
+    background: #000000 !important;
+    color: white !important;
+}
+
+/* Notes Section Styles */
+.notes-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.notes-textarea:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.notes-hint {
+    color: #666;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Button Color Variants */
+.button-success {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-success:hover {
+    background: #000000;
+}
+
+.button-danger {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-danger:hover {
+    background: #000000;
+}
+
+.button-warning {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-warning:hover {
+    background: #000000;
+}
+
+.button-info {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-info:hover {
+    background: #000000;
+}
+
+.button-primary {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-primary:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-purple {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-purple:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-orange {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-orange:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-pink {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-pink:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-teal {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-teal:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-yellow {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-yellow:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-secondary {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-secondary:hover {
+    background: #000000;
+    color: white;
+}
+
+.button-dark {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.button-dark:hover {
+    background: #000000;
+    color: white;
+}
+
+/* Text Color Variants */
+.text-success {
+    color: #000000;
+}
+
+.text-danger {
+    color: #000000;
+}
+
+.text-warning {
+    color: #666666;
+}
+
+.text-info {
+    color: #666666;
+}
+
+.text-muted {
+    color: #666;
+}
+
+.text-primary {
+    color: #000000;
+}
+
+/* Font Styles */
+.font-bold {
+    font-weight: bold;
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+/* Hidden Element */
+.hidden {
+    display: none;
+}
+
+/* Payment Dialog Styles */
+.payment-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.payment-dialog-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.payment-dialog-wide {
+    max-width: 600px;
+}
+
+.payment-dialog-header {
+    margin-top: 0;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+.payment-info-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+}
+
+.payment-total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.payment-amount-paid {
+    color: #000000;
+    margin-top: 5px;
+}
+
+.payment-amount-due {
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.payment-form-group {
+    margin-bottom: 15px;
+}
+
+.payment-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.payment-form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+.payment-form-hint {
+    color: #666;
+}
+
+.payment-actions {
+    text-align: right;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.payment-cancel-button {
+    background: #666666;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.payment-submit-button {
+    background: #f5f5f5;
+    color: #000000;
+    border: 1px solid #cccccc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.payment-submit-button:hover {
+    background: #000000;
+    color: white;
+}
+
+.payment-close-button {
+    background: #f5f5f5;
+    color: #000000;
+    border: 1px solid #cccccc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.payment-close-button:hover {
+    background: #000000;
+    color: white;
+}
+
+/* Payment History Styles */
+.payment-history-item {
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+.payment-history-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.payment-history-amount {
+    text-align: right;
+    color: #000000;
+    font-weight: bold;
+}
+
+.payment-history-notes {
+    grid-column: 1 / -1;
+}
+
+/* Credit Application Styles */
+.credits-list {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.credits-list h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #000000;
+}
+
+.credit-option {
+    padding: 12px;
+    margin-bottom: 10px;
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.credit-option:hover {
+    background: #f5f5f5;
+}
+
+.credit-option label {
+    cursor: pointer;
+    display: block;
+}
+
+.credit-checkbox {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.text-info {
+    color: #5bc0de;
+}
+
+/* Invoice Styles */
+.invoice-totals-preview {
+    margin-top: 20px;
+    text-align: right;
+    padding: 15px;
+}
+
+.invoice-subtotal {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.invoice-tax {
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.invoice-total {
+    font-size: 18px;
+    color: #000000;
+    border-top: 1px solid #ccc;
+    padding-top: 8px;
+}
+
+.invoice-due-warning {
+    color: orange;
+}
+
+.invoice-status-paid {
+    color: #000000;
+    font-weight: bold;
+}
+
+.invoice-status-overdue {
+    color: #000000;
+    font-weight: bold;
+}
+
+.invoice-status-unpaid {
+    color: #666666;
+    font-weight: bold;
+}
+
+/* Attachment Dialog Styles */
+.attachment-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.attachment-dialog-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.attachment-current-section {
+    margin: 20px 0;
+}
+
+.attachment-upload-section {
+    margin: 20px 0;
+}
+
+.attachment-file-input {
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+}
+
+.attachment-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.attachment-item-box {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    margin: 5px 0;
+    border-radius: 4px;
+    background: #f5f5f5;
+}
+
+.attachment-size-text {
+    color: #666;
+    margin-left: 10px;
+}
+
+.attachment-remove-button {
+    background: #000000;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.attachment-link {
+    color: #000000;
+    text-decoration: underline;
+}
+
+/* Table Status Colors */
+.table-status-overdue {
+    color: #000000;
+    font-weight: bold;
+}
+
+.table-status-partial {
+    color: #666666;
+    font-weight: bold;
+}
+
+.table-status-paid {
+    color: #000000;
+    font-weight: bold;
+}
+
+/* Inventory Styles */
+.inventory-nav {
+    margin: 20px 0;
+}
+
+.add-product-form {
+    display: none;
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.product-form-input {
+    margin: 5px;
+    padding: 8px;
+}
+
+.product-name-input {
+    width: 200px;
+}
+
+.product-price-input {
+    width: 100px;
+}
+
+.product-stock-input {
+    width: 100px;
+}
+
+.low-stock {
+    color: #000000;
+    font-weight: bold;
+}
+
+/* Dashboard Card Styles */
+.dashboard-card-subtitle {
+    opacity: 0.8;
+    margin: 10px 0 0 0;
+}
+
+/* Settings Styles */
+.settings-submit-button {
+    background: #000000;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.settings-actions-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.settings-reset-button {
+    background: #666666;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.settings-export-button {
+    background: #000000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Payroll Styles */
+.payroll-calculations-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    display: none;
+}
+
+.payroll-deduction-rate {
+    color: #666;
+    font-size: 12px;
+}
+
+.payroll-net-pay {
+    color: #000000;
+    font-weight: bold;
+}
+
+.payroll-table-header-section {
+    background: #f5f5f5;
+    text-align: left;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.payroll-table-header-section-border {
+    background: #f5f5f5;
+    text-align: left;
+    padding: 10px;
+    font-size: 16px;
+    border-top: 3px solid #cccccc;
+}
+
+/* Report Table Styles */
+.report-table-left {
+    text-align: left;
+}
+
+.report-table-right {
+    text-align: right;
+}
+
+.report-table-padded {
+    padding-left: 30px;
+}
+
+.report-table-spacer {
+    height: 5px;
+}
+
+.report-table-spacer-10 {
+    height: 10px;
+}
+
+.report-table-positive {
+    color: #000000;
+}
+
+.report-table-negative {
+    color: #000000;
+}
+
+.report-table-conditional {
+    color: inherit;
+}
+
+/* Tax Card Styles */
+.tax-card-danger {
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.tax-amount-danger {
+    color: #000000;
+    font-size: 28px;
+}
+
+/* Empty State Styles */
+.empty-list-message {
+    padding: 15px;
+    color: #999;
+}
+
+/* File Icon Styles */
+.file-icon-large {
+    font-size: 18px;
+}
+
+/* Customer Profile Styles (reuses vendor styles) */
+.customer-list-container {
+    display: flex;
+    gap: 20px;
+    min-height: 600px;
+}
+
+.customer-sidebar {
+    width: 300px;
+    background: white;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#customers-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.customer-profile-container {
+    flex: 1;
+    background: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.customer-profile {
+    display: none;
+}
+
+/* Storage Test Styles */
+.test-success {
+    color: green;
+}
+
+.test-error {
+    color: red;
+}
+
+/* Conditional Color Classes */
+.conditional-positive {
+    color: #000000;
+}
+
+.conditional-negative {
+    color: #000000;
+}
+
+/* Dashboard Specific Styles */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.dashboard-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dashboard-card .amount {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.dashboard-card .details {
+    font-size: 14px;
+    color: #888;
+    margin-top: 10px;
+}
+
+.card-money-in {
+    border-left: 5px solid #000000;
+}
+
+.card-money-in .amount {
+    color: #000000;
+}
+
+.card-money-out {
+    border-left: 5px solid #000000;
+}
+
+.card-money-out .amount {
+    color: #000000;
+}
+
+.card-unpaid-invoices {
+    border-left: 5px solid #000000;
+}
+
+.card-unpaid-invoices .amount {
+    color: #000000;
+}
+
+.card-unpaid-bills {
+    border-left: 5px solid #000000;
+}
+
+.card-unpaid-bills .amount {
+    color: #000000;
+}
+
+.card-overdue-invoices {
+    border-left: 5px solid #000000;
+}
+
+.card-overdue-invoices .amount {
+    color: #000000;
+}
+
+.card-overdue-bills {
+    border-left: 5px solid #000000;
+}
+
+.card-overdue-bills .amount {
+    color: #000000;
+}
+
+/* Danger state for overdue cards */
+.dashboard-card.card-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.dashboard-card.card-danger h3 {
+    color: white;
+}
+
+.dashboard-card.card-danger .amount {
+    color: white;
+}
+
+.dashboard-card.card-danger .details {
+    color: white;
+}
+
+.cash-flow-summary {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-left: 5px solid #000000;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.cash-flow-summary h2 {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+.cash-flow-summary .amount {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Dashboard Layout with Sidebar */
+.dashboard-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.dashboard-sidebar {
+    width: 180px;
+    flex-shrink: 0;
+}
+
+.dashboard-main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.quick-actions-section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.quick-actions-section h2 {
+    margin: 0 0 20px 0;
+    color: #000000;
+    font-size: 18px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-buttons .button {
+    text-align: center;
+    width: 100%;
+    padding: 10px 8px;
+    font-size: 13px;
+    display: block !important;
+    box-sizing: border-box;
+}
+
+/* Low Stock Alert Styles */
+.low-stock-alert {
+    background: #f5f5f5;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.low-stock-alert h3 {
+    color: #000000;
+    margin-top: 0;
+}
+
+.low-stock-alert p {
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.low-stock-list {
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.low-stock-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 4px solid #000000;
+    background: #f5f5f5;
+}
+
+.low-stock-item strong {
+    font-weight: bold;
+}
+
+.low-stock-stock {
+    color: #000000;
+    font-weight: bold;
+}
+
+.low-stock-link {
+    margin-left: 15px;
+    color: #000000;
+    text-decoration: underline;
+}
+
+/* Alert danger state for low stock */
+.low-stock-alert.alert-danger {
+    background: #dc3545;
+    color: white;
+    border: 2px solid #bd2130;
+}
+
+.low-stock-alert.alert-danger h3 {
+    color: white;
+}
+
+.low-stock-alert.alert-danger p {
+    color: white;
+}
+
+.low-stock-list.alert-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.low-stock-item.alert-danger-item {
+    background: #dc3545;
+    color: white;
+    border-left-color: #bd2130;
+}
+
+.low-stock-item.alert-danger-item .low-stock-stock {
+    color: white;
+}
+
+.low-stock-item.alert-danger-item .low-stock-link {
+    color: white;
+}
+
+/* Bill Totals Preview */
+.bill-totals-preview {
+    margin: 20px 0;
+    padding: 15px;
+
+
+    border-top: 1px solid #cccccc;
+}
+
+.bill-totals-preview-inner {
+    text-align: right;
+}
+
+.bill-total-amount {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Bill Payment Fields */
+.bill-payment-fields {
+    display: none;
+    border: 2px solid #000000;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    background-color: #f5f5f5;
+}
+
+.bill-payment-fields h4 {
+    margin-top: 0;
+    color: #000000;
+}
+
+.bill-payment-notes {
+    height: 60px;
+}
+
+/* Settings Form Styles */
+.settings-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.settings-form .form-group {
+    margin-bottom: 20px;
+}
+
+.settings-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.settings-form .form-group input,
+.settings-form .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.settings-form .form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+}
+
+.tax-preview {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    margin-top: 10px;
+}
+
+/* Invoice Payment Dialog Enhancements */
+.payment-dialog-scrollable {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.invoice-payment-notes-textarea {
+    height: 60px;
+}
+
+/* Bill Payment Dialog - Full Coverage */
+.bill-payment-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.bill-payment-dialog-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.bill-payment-dialog h3 {
+    margin-top: 0;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+.bill-payment-info-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+}
+
+.bill-payment-info-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.bill-payment-total {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin-top: 8px;
+}
+
+.bill-payment-amount-paid {
+    color: #17a2b8;
+    margin-top: 5px;
+}
+
+.bill-payment-amount-due {
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.bill-payment-form-field {
+    margin-bottom: 15px;
+}
+
+.bill-payment-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.bill-payment-form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+
+.bill-payment-form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    height: 60px;
+    resize: vertical;
+}
+
+.bill-payment-form-hint {
+    color: #666;
+}
+
+.bill-payment-actions {
+    text-align: right;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.bill-payment-cancel-btn {
+    background: #666666;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.bill-payment-submit-btn {
+    background: #f5f5f5;
+    color: #000000;
+    border: 1px solid #cccccc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.bill-payment-submit-btn:hover {
+    background: #000000;
+    color: white;
+}
+
+/* Action Buttons with Margins */
+.action-btn-view {
+    background: #000000;
+    margin: 2px;
+}
+
+.action-btn-paid {
+    background: #000000;
+    margin: 2px;
+}
+
+.action-btn-edit {
+    background: #000000;
+    margin: 2px;
+}
+
+.action-btn-delete {
+    background: #000000;
+    margin: 2px;
+}
+
+/* Primary Navigation Bar */
+.primary-nav {
+    background: white;
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.primary-nav .nav-link {
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #000000;
+    background: #f5f5f5;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s;
+    border: 1px solid #cccccc;
+}
+
+.primary-nav .nav-link:hover {
+    background: #000000;
+    color: white;
+}
+
+.primary-nav .nav-link.active {
+    background: #000000;
+    color: white;
+    border-color: #000000;
+}
+
+.primary-nav .nav-divider {
+    width: 1px;
+    height: 25px;
+    background: #cccccc;
+    margin: 0 5px;
+}
+
+/* Helper Text and Tooltips */
+.helper-text {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+    display: block;
+}
+
+.helper-text-info {
+    font-size: 12px;
+    color: #000000;
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #000000;
+    margin: 10px 0;
+    display: block;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: #666666;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 16px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 5px;
+    position: relative;
+}
+
+.tooltip-icon:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1000;
+    font-size: 12px;
+    font-weight: normal;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.tooltip-icon:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333333;
+    z-index: 1000;
+}
+
+/* Search Box Styles */
+.search-box {
+    margin: 20px 0;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    font-size: 16px;
+    border: 2px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+.search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #666666;
+    pointer-events: none;
+}
+
+.search-clear {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #cccccc;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.search-clear:hover {
+    background: #999999;
+}
+
+.search-clear.visible {
+    display: flex;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #666666;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-controls label {
+    font-size: 14px;
+    color: #333333;
+}
+
+.pagination-controls select {
+    padding: 5px 10px;
+    border: 2px solid #cccccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.pagination-controls select:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+#invoice-page-info,
+#bill-page-info {
+    font-size: 14px;
+    color: #333333;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Loading States */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #000000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loading-text {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333333;
+    font-weight: 500;
+}
+
+/* Inline loading for tables */
+.table-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+    font-size: 16px;
+}
+
+.table-loading-spinner {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #000000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Button loading state */
+.button.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.button.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.button-danger.loading::after {
+    border-color: #ffffff;
+    border-top-color: transparent;
+}
+
+/* Skeleton loading for lists */
+.skeleton-item {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+.skeleton-text.medium {
+    width: 80%;
+}
+
+.skeleton-text.long {
+    width: 100%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Invoice Modal */
+.invoice-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.invoice-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Bill Modal */
+.bill-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.bill-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Close modal on overlay click - handled by JavaScript */
+.invoice-modal h3,
+.bill-modal h3 {
+    margin-top: 0;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Mobile responsiveness for modals */
+@media (max-width: 768px) {
+    .invoice-modal-content,
+    .bill-modal-content {
+        padding: 20px;
+        max-width: 100%;
+        width: 100%;
+        max-height: 95vh;
+    }
+    
+    .invoice-modal,
+    .bill-modal {
+        padding: 10px;
+    }
+}
+
+/* Keyboard Navigation Hints */
+.keyboard-hints {
+    background: #f0f7ff;
+    border: 1px solid #0066cc;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.keyboard-hints-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.keyboard-hints-content strong {
+    color: #0066cc;
+    margin-right: 8px;
+}
+
+.keyboard-hints-content span {
+    color: #333;
+    white-space: nowrap;
+}
+
+kbd {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    color: #333;
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    margin: 0 2px;
+    padding: 2px 6px;
+    white-space: nowrap;
+}
+
+/* Highlight focused form fields for better visibility */
+.invoice-modal input:focus,
+.invoice-modal select:focus,
+.bill-modal input:focus,
+.bill-modal select:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Smooth focus transitions */
+.invoice-modal input,
+.invoice-modal select,
+.bill-modal input,
+.bill-modal select {
+    transition: outline 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Two-column form layout */
+.form-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-column-left,
+.form-column-right {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .form-two-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Autocomplete Styles */
+.autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.autocomplete-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 4px 4px;
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.autocomplete-active {
+    background-color: #e9f5ff;
+}
+
+.autocomplete-item strong {
+    color: #0066cc;
+    font-weight: 600;
+}
+
+.autocomplete-secondary {
+    color: #666;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.autocomplete-item.no-results {
+    cursor: default;
+    color: #999;
+    padding: 12px;
+}
+
+.autocomplete-item.no-results:hover {
+    background-color: #fff;
+}

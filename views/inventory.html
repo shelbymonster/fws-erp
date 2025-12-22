@@ -3,47 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management</title>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <title>Inventory - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
 </head>
 <body>
     <header>
-        <h1>Inventory Management</h1>
+        <div class="container">
+            <h1>Product Management</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
     </header>
-    <main>
-        <section id="inventory-list">
-            <h2>Product List</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Inventory items will be populated here -->
-                </tbody>
-            </table>
-        </section>
-        <section id="add-product">
-            <h2>Add New Product</h2>
-            <form id="product-form">
-                <label for="product-name">Name:</label>
-                <input type="text" id="product-name" required>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link active">Products</a>
+            <a href="employees.html" class="nav-link">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+        <!-- Page Actions -->
+        <nav class="inventory-nav">
+            <a href="#" class="button" onclick="showAddProductForm()">Add New Product</a>
+            <button class="button button-success" onclick="exportProductsToCSV()">Export CSV</button>
+        </nav>
+
+        <main>
+            <!-- Add Product Form -->
+            <div id="add-product-form" class="add-product-form">
+                <h3>Add New Product</h3>
+                <p class="helper-text-info"><strong>Tip:</strong> Choose "Physical Product" for items you track in inventory (stock levels change with purchases and sales). Choose "Service/Fee" for non-tangible items like delivery fees, installation charges, or warranty fees.</p>
+                <form onsubmit="addProduct(event)">
+                    <input type="text" id="productName" placeholder="Product Name" required class="product-form-input product-name-input">
+                    <br>
+                    <select id="productType" required class="product-form-input product-name-input" onchange="toggleStockField()">
+                        <option value="product">Physical Product (tracks stock)</option>
+                        <option value="service">Service/Fee (no stock tracking)</option>
+                    </select>
+                    <br>
+                    <input type="number" id="productPrice" placeholder="Price" step="0.01" required class="product-form-input product-price-input">
+                    <input type="number" id="productStock" placeholder="Stock Quantity" required class="product-form-input product-stock-input">
+                    <br>
+                    <button type="submit" class="button">Add Product</button>
+                    <button type="button" class="button button-danger" onclick="hideAddProductForm()">Cancel</button>
+                </form>
+            </div>
+
+            <!-- Product List -->
+            <div id="product-list">
+                <h2>Product Inventory</h2>
                 
-                <label for="product-price">Price:</label>
-                <input type="number" id="product-price" required>
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="productSearchInput" class="search-input" placeholder="Search products by name, type, or price..." oninput="searchProducts()">
+                    <span class="search-icon"></span>
+                    <button class="search-clear" id="productSearchClear" onclick="clearProductSearch()">×</button>
+                </div>
                 
-                <label for="product-quantity">Quantity:</label>
-                <input type="number" id="product-quantity" required>
-                
-                <button type="submit">Add Product</button>
-            </form>
-        </section>
-    </main>
-    <script src="../public/js/main.js"></script>
+                <table class="table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <!-- Products will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Stock History Modal -->
+        <div id="stock-history-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeStockHistoryModal()">&times;</span>
+                <h3 id="stock-history-title">Stock History</h3>
+                <div id="stock-history-content">
+                    <div id="stock-history-summary" style="margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px;">
+                        <p><strong>Product:</strong> <span id="history-product-name"></span></p>
+                        <p><strong>Current Stock:</strong> <span id="history-current-stock"></span></p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Reference</th>
+                                <th>Change</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-history-tbody">
+                            <!-- History entries will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/export-utility.js"></script>
+    <script src="../js/inventory.js"></script>
 </body>
 </html>

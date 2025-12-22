@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Reports</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="employees.html" class="nav-link">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link active">Reports</a>
+        </nav>
+
+        <main>
+            <!-- Report Selection -->
+            <div id="report-selection" class="reports-selection">
+                <h3>Available Reports</h3>
+                <div class="report-categories">
+                    <div class="report-category">
+                        <h4>Sales Reports</h4>
+                        <div class="report-buttons">
+                            <button class="button button-success" onclick="showSalesReport()">Sales by Product</button>
+                            <button class="button button-purple" onclick="showCustomerReport()">Sales by Customer</button>
+                            <button class="button button-primary" onclick="showInvoiceReport()">Invoice Report</button>
+                            <button class="button button-orange" onclick="showRevenueReport()">Sales by Month</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-category">
+                        <h4>📋 Expense Reports</h4>
+                        <div class="report-buttons">
+                            <button class="button button-danger" onclick="showExpenseReport()">Expenses by Month</button>
+                            <button class="button button-pink" onclick="showVendorReport()">Expenses by Vendor</button>
+                            <button class="button button-secondary" onclick="showBillsReport()">Bills Report</button>
+                            <button class="button button-orange" onclick="showCostReport()">Cost Breakdown</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-category">
+                        <h4>📦 Inventory Reports</h4>
+                        <div class="report-buttons">
+                            <button class="button button-teal" onclick="showInventoryReport()">Inventory Levels</button>
+                            <button class="button button-purple" onclick="showStockReport()">Stock Movement</button>
+                            <button class="button button-orange" onclick="showReorderReport()">Reorder Report</button>
+                            <button class="button button-secondary" onclick="showValuationReport()">Inventory Valuation</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-category">
+                        <h4>Payroll Reports</h4>
+                        <div class="report-buttons">
+                            <button class="button button-purple" onclick="showPayrollReportOptions()">Payroll History</button>
+                            <button class="button button-primary" onclick="showEmployeeSummary()">Employee Summary</button>
+                            <button class="button button-orange" onclick="showTaxSummary()">Tax Summary</button>
+                            <button class="button button-success" onclick="showPayrollAnalysis()">Payroll Analysis</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-category">
+                        <h4>📊 Financial Reports</h4>
+                        <div class="report-buttons">
+                            <button class="button button-success" onclick="showProfitLossReport()">Profit & Loss</button>
+                            <button class="button button-primary" onclick="showCashFlowReport()">Cash Flow</button>
+                            <button class="button button-purple" onclick="showBalanceSheetReport()">Balance Sheet</button>
+                            <button class="button button-orange" onclick="showFinancialSummary()">Financial Summary</button>
+                        </div>
+                    </div>
+                    
+                    <div class="report-category">
+                        <h4>Business Analytics</h4>
+                        <div class="report-buttons">
+                            <button class="button button-pink" onclick="showPerformanceReport()">Performance Metrics</button>
+                            <button class="button button-teal" onclick="showTrendReport()">Trend Analysis</button>
+                            <button class="button button-secondary" onclick="showForecastReport()">Sales Forecast</button>
+                            <button class="button button-yellow" onclick="showComparisonReport()">Period Comparison</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payroll Report Options -->
+            <div id="payroll-report-options" class="report-options">
+                <h3>Payroll History Report</h3>
+                <form onsubmit="generatePayrollHistoryReport(event)">
+                    <div class="form-row">
+                        <label>Report Type:</label>
+                        <select id="reportType" class="vendor-select" onchange="toggleReportOptions()">
+                            <option value="all">All Payroll Records</option>
+                            <option value="date-range">Date Range</option>
+                            <option value="employee">Specific Employee</option>
+                            <option value="payment-method">By Payment Method</option>
+                        </select>
+                    </div>
+                    
+                    <div id="dateRangeOptions" class="form-row hidden">
+                        <label>Start Date:</label>
+                        <input type="date" id="reportStartDate">
+                        
+                        <label>End Date:</label>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                    
+                    <div id="employeeOptions" class="form-row hidden">
+                        <label>Employee:</label>
+                        <select id="reportEmployee" class="vendor-select">
+                            <option value="">Select employee...</option>
+                        </select>
+                    </div>
+                    
+                    <div id="paymentMethodOptions" class="form-row hidden">
+                        <label>Payment Method:</label>
+                        <select id="reportPaymentMethod" class="vendor-select">
+                            <option value="">All Methods</option>
+                            <option value="check">Check</option>
+                            <option value="cash">Cash</option>
+                            <option value="direct-deposit">Direct Deposit</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="button">Generate Report</button>
+                        <button type="button" class="button cancel" onclick="hideReportOptions()">Cancel</button>
+                        <button type="button" class="button button-danger" onclick="exportToPDF()">Export PDF</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Report Results -->
+            <div id="report-results" class="report-results">
+                <div id="report-header">
+                    <h3 id="report-title">Payroll Report</h3>
+                    <div id="report-summary" class="report-summary-stats">
+                        <!-- Summary stats will appear here -->
+                    </div>
+                </div>
+                
+                <div id="report-table-container">
+                    <table class="table" id="report-table">
+                        <thead id="report-table-head">
+                            <!-- Table headers will be populated by JavaScript -->
+                        </thead>
+                        <tbody id="report-table-body">
+                            <!-- Report data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="report-totals" class="report-totals">
+                    <!-- Report totals will appear here -->
+                </div>
+            </div>
+
+            <!-- Employee Summary Report -->
+            <div id="employee-summary-report" class="employee-summary-report">
+                <h3>Employee Summary Report</h3>
+                <div id="employee-summary-container">
+                    <!-- Employee summary cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Tax Summary Report -->
+            <div id="tax-summary-report" class="tax-summary-report">
+                <h3>Tax Summary Report</h3>
+                <div id="tax-summary-container">
+                    <!-- Tax summary will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/reports.js"></script>
+</body>
+</html>

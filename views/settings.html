@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Settings</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+            <span class="nav-divider"></span>
+            <a href="settings.html" class="nav-link active">Settings</a>
+        </nav>
+        <h2>⚙️ System Settings</h2>
+        
+        <div class="settings-form">
+            <form id="settings-form">
+                <div class="form-group">
+                    <label for="taxRate">Tax Rate (%):</label>
+                    <input type="number" id="taxRate" step="0.01" min="0" max="100" required>
+                    <small>Enter the tax rate as a percentage (e.g., 8.25 for 8.25%).</small>
+                    
+                    <div class="tax-preview">
+                        <strong>Preview:</strong> On a $100 invoice, tax would be $<span id="tax-preview">0.00</span> 
+                        (Total: $<span id="total-preview">100.00</span>)
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lowStockThreshold">Low Stock Alert Threshold:</label>
+                    <input type="number" id="lowStockThreshold" min="0" required>
+                    <small>Alert when product stock falls below this number (e.g., 10).</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName" required>
+                    <small>Your business name as it appears on invoices.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyAddress">Company Address:</label>
+                    <textarea id="companyAddress" rows="3" required></textarea>
+                    <small>Your business address for invoices and bills.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="currency">Currency:</label>
+                    <select id="currency" required>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="CAD">CAD ($)</option>
+                    </select>
+                    <small>Default currency for all transactions.</small>
+                </div>
+                
+                <button type="submit" class="settings-submit-button">
+                    Save Settings
+                </button>
+            </form>
+            
+            <div class="settings-actions-section">
+                <button onclick="resetToDefaults()" class="settings-reset-button">
+                    Reset to Defaults
+                </button>
+                <button onclick="exportSettings()" class="settings-export-button">
+                    Export Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script>
+        // Load current settings
+        function loadSettings() {
+            const settings = erpStorage.getSettings();
+            
+            document.getElementById('taxRate').value = (settings.taxRate || 8.25).toFixed(2);
+            document.getElementById('lowStockThreshold').value = settings.lowStockThreshold || 10;
+            document.getElementById('companyName').value = settings.companyName || 'Your Company Name';
+            document.getElementById('companyAddress').value = settings.companyAddress || '123 Business St, City, State 12345';
+            document.getElementById('currency').value = settings.currency || 'USD';
+            
+            updateTaxPreview();
+        }
+        
+        // Update tax preview
+        function updateTaxPreview() {
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const sampleAmount = 100;
+            const taxAmount = (sampleAmount * taxRate) / 100;
+            const total = sampleAmount + taxAmount;
+            
+            document.getElementById('tax-preview').textContent = taxAmount.toFixed(2);
+            document.getElementById('total-preview').textContent = total.toFixed(2);
+        }
+        
+        // Save settings
+        function saveSettings(event) {
+            event.preventDefault();
+            
+            const settings = {
+                taxRate: parseFloat(document.getElementById('taxRate').value),
+                lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value),
+                companyName: document.getElementById('companyName').value,
+                companyAddress: document.getElementById('companyAddress').value,
+                currency: document.getElementById('currency').value
+            };
+            
+            if (erpStorage.setSettings(settings)) {
+                alert(' Settings saved successfully!');
+            } else {
+                alert(' Error saving settings. Please try again.');
+            }
+        }
+        
+        // Reset to defaults
+        function resetToDefaults() {
+            if (confirm('Reset all settings to default values?')) {
+                const defaultSettings = {
+                    taxRate: 8.25,
+                    lowStockThreshold: 10,
+                    companyName: 'Your Company Name',
+                    companyAddress: '123 Business St, City, State 12345',
+                    currency: 'USD'
+                };
+                
+                erpStorage.setSettings(defaultSettings);
+                loadSettings();
+                alert('🔄 Settings reset to defaults!');
+            }
+        }
+        
+        // Export settings
+        function exportSettings() {
+            const settings = erpStorage.getSettings();
+            const dataStr = JSON.stringify(settings, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'erp-settings.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Event listeners
+        document.getElementById('settings-form').addEventListener('submit', saveSettings);
+        document.getElementById('taxRate').addEventListener('input', updateTaxPreview);
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+        });
+    </script>
+</body>
+</html>
