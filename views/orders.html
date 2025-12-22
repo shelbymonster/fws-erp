@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link rel="stylesheet" href="../public/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Order Management</h1>
+    </header>
+    <main>
+        <section id="order-form">
+            <h2>Create New Order</h2>
+            <form id="new-order">
+                <label for="customer-id">Customer ID:</label>
+                <input type="text" id="customer-id" name="customer-id" required>
+                
+                <label for="product-ids">Product IDs (comma-separated):</label>
+                <input type="text" id="product-ids" name="product-ids" required>
+                
+                <label for="total-amount">Total Amount:</label>
+                <input type="number" id="total-amount" name="total-amount" required>
+                
+                <button type="submit">Create Order</button>
+            </form>
+        </section>
+        <section id="order-list">
+            <h2>Existing Orders</h2>
+            <ul id="orders">
+                <!-- Orders will be dynamically populated here -->
+            </ul>
+        </section>
+    </main>
+    <script src="../public/js/main.js"></script>
+</body>
+</html>

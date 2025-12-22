@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Test - Simple ERP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 10px; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>LocalStorage Test</h1>
+    
+    <div class="test-section">
+        <h2>Storage Availability Test</h2>
+        <button onclick="testStorage()">Test LocalStorage</button>
+        <div id="storage-test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>ERP Storage Test</h2>
+        <button onclick="testERPStorage()">Test ERP Storage</button>
+        <button onclick="viewStoredData()">View Stored Data</button>
+        <button onclick="clearAllData()">Clear All Data</button>
+        <div id="erp-test-result"></div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script>
+        function testStorage() {
+            const result = document.getElementById('storage-test-result');
+            
+            try {
+                // Test basic localStorage
+                localStorage.setItem('test', 'Hello World');
+                const retrieved = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                
+                if (retrieved === 'Hello World') {
+                    result.innerHTML = '<p class="test-success">✅ LocalStorage is working!</p>';
+                } else {
+                    result.innerHTML = '<p class="test-error">❌ LocalStorage test failed</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="test-error">❌ LocalStorage error: ${error.message}</p>`;
+            }
+        }
+        
+        function testERPStorage() {
+            const result = document.getElementById('erp-test-result');
+            
+            if (!window.erpStorage) {
+                result.innerHTML = '<p class="test-error">❌ ERP Storage not loaded</p>';
+                return;
+            }
+            
+            try {
+                // Test adding a customer
+                const testCustomer = {
+                    name: 'Test Customer',
+                    email: 'test@example.com',
+                    phone: '555-TEST'
+                };
+                
+                const success = erpStorage.addCustomer(testCustomer);
+                
+                if (success) {
+                    const customers = erpStorage.getCustomers();
+                    const found = customers.find(c => c.email === 'test@example.com');
+                    
+                    if (found) {
+                        result.innerHTML = '<p class="test-success">✅ ERP Storage is working! Test customer added.</p>';
+                    } else {
+                        result.innerHTML = '<p class="test-error">❌ Could not retrieve test customer</p>';
+                    }
+                } else {
+                    result.innerHTML = '<p class="test-error">❌ Failed to add test customer</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="test-error">❌ ERP Storage error: ${error.message}</p>`;
+            }
+        }
+        
+        function viewStoredData() {
+            const result = document.getElementById('erp-test-result');
+            
+            if (!window.erpStorage) {
+                result.innerHTML = '<p class="test-error">❌ ERP Storage not loaded</p>';
+                return;
+            }
+            
+            const data = {
+                customers: erpStorage.getCustomers(),
+                vendors: erpStorage.getVendors(),
+                products: erpStorage.getProducts(),
+                invoices: erpStorage.getInvoices(),
+                bills: erpStorage.getBills()
+            };
+            
+            result.innerHTML = `
+                <h3>Current Stored Data:</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        }
+        
+        function clearAllData() {
+            if (!window.erpStorage) {
+                alert('ERP Storage not loaded');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear all data?')) {
+                erpStorage.clearAllData();
+                alert('All data cleared and reset to defaults');
+                viewStoredData();
+            }
+        }
+    </script>
+</body>
+</html>

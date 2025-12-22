@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Server Test - Simple ERP</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #5cb85c;
+            color: white;
+        }
+        button:hover { background: #4cae4c; }
+        .success { color: #5cb85c; font-weight: bold; }
+        .error { color: #d9534f; font-weight: bold; }
+        .info { color: #5bc0de; }
+        pre { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 5px;
+            overflow-x: auto; 
+            border: 1px solid #e9ecef;
+        }
+        .nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .nav a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 ERP System - Live Server Test</h1>
+        
+        <div class="nav">
+            <a href="index.html">Dashboard</a>
+            <a href="views/customers.html">👥 Customers</a>
+            <a href="views/vendors.html">🏢 Vendors</a>
+            <a href="views/inventory.html">📦 Inventory</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 System Status</h2>
+            <button onclick="checkSystem()">Check System Status</button>
+            <div id="system-status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>💾 Storage Test</h2>
+            <button onclick="testStorage()">Test Storage</button>
+            <button onclick="addTestCustomer()">Add Test Customer</button>
+            <button onclick="viewAllData()">View All Data</button>
+            <button onclick="clearAllData()">Clear All Data (Reload Sample)</button>
+            <button onclick="clearAllDataClean()">Clear All Data (Stay Empty)</button>
+            <button onclick="preventSampleReload()">Fix Sample Data Reload Issue</button>
+            <div id="storage-results"></div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script>
+        function checkSystem() {
+            const status = document.getElementById('system-status');
+            
+            let html = '<h3>System Check Results:</h3><ul>';
+            
+            // Check if erpStorage is available
+            if (typeof erpStorage !== 'undefined') {
+                html += '<li class="success">✅ ERP Storage System: Loaded</li>';
+                html += `<li class="info">📊 LocalStorage Available: ${erpStorage.isStorageAvailable ? 'Yes' : 'No (using memory)'}</li>`;
+            } else {
+                html += '<li class="error">❌ ERP Storage System: Not loaded</li>';
+            }
+            
+            // Check localStorage directly
+            try {
+                localStorage.setItem('test', 'works');
+                localStorage.removeItem('test');
+                html += '<li class="success">✅ Browser LocalStorage: Working</li>';
+            } catch (e) {
+                html += '<li class="error">❌ Browser LocalStorage: ' + e.message + '</li>';
+            }
+            
+            // Check current URL
+            html += `<li class="info">🌐 Current URL: ${window.location.href}</li>`;
+            
+            html += '</ul>';
+            status.innerHTML = html;
+        }
+        
+        function testStorage() {
+            const results = document.getElementById('storage-results');
+            
+            if (!erpStorage) {
+                results.innerHTML = '<p class="error">❌ ERP Storage not available</p>';
+                return;
+            }
+            
+            let html = '<h3>Storage Test Results:</h3>';
+            
+            try {
+                // Get current counts
+                const counts = {
+                    customers: erpStorage.getCustomers().length,
+                    vendors: erpStorage.getVendors().length,
+                    products: erpStorage.getProducts().length,
+                    invoices: erpStorage.getInvoices().length,
+                    bills: erpStorage.getBills().length
+                };
+                
+                html += '<div class="success">✅ Storage is working!</div>';
+                html += '<h4>Current Data Counts:</h4><ul>';
+                Object.keys(counts).forEach(key => {
+                    html += `<li>${key}: ${counts[key]} items</li>`;
+                });
+                html += '</ul>';
+                
+            } catch (error) {
+                html += `<div class="error">❌ Storage test failed: ${error.message}</div>`;
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        function addTestCustomer() {
+            const results = document.getElementById('storage-results');
+            
+            if (!erpStorage) {
+                results.innerHTML = '<p class="error">❌ ERP Storage not available</p>';
+                return;
+            }
+            
+            const testCustomer = {
+                name: `Test Customer ${Date.now()}`,
+                email: `test${Date.now()}@example.com`,
+                phone: '555-TEST',
+                address: '123 Test St',
+                contactName: 'Test Person'
+            };
+            
+            console.log('🧪 Adding test customer:', testCustomer);
+            
+            if (erpStorage.addCustomer(testCustomer)) {
+                results.innerHTML = '<p class="success">✅ Test customer added successfully!</p>';
+                testStorage(); // Refresh the display
+            } else {
+                results.innerHTML = '<p class="error">❌ Failed to add test customer</p>';
+            }
+        }
+        
+        function viewAllData() {
+            const results = document.getElementById('storage-results');
+            
+            if (!erpStorage) {
+                results.innerHTML = '<p class="error">❌ ERP Storage not available</p>';
+                return;
+            }
+            
+            const allData = {
+                customers: erpStorage.getCustomers(),
+                vendors: erpStorage.getVendors(),
+                products: erpStorage.getProducts(),
+                invoices: erpStorage.getInvoices(),
+                bills: erpStorage.getBills()
+            };
+            
+            results.innerHTML = `
+                <h3>📂 All Stored Data:</h3>
+                <pre>${JSON.stringify(allData, null, 2)}</pre>
+            `;
+        }
+        
+        function clearAllData() {
+            if (!erpStorage) {
+                alert('ERP Storage not available');
+                return;
+            }
+            
+            if (confirm('⚠️ Are you sure you want to clear ALL data? This will reset everything to defaults.')) {
+                erpStorage.clearAllData();
+                alert('🗑️ All data cleared and reset to defaults');
+                testStorage();
+            }
+        }
+        
+        // Auto-run system check when page loads
+        window.addEventListener('load', function() {
+            setTimeout(checkSystem, 500);
+        });
+    </script>
+</body>
+</html>

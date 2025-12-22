@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices - Simple ERP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Invoice Management</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Primary Navigation -->
+        <nav class="primary-nav">
+            <a href="../index.html" class="nav-link">Dashboard</a>
+            <span class="nav-divider"></span>
+            <a href="invoices.html" class="nav-link active">Invoices</a>
+            <a href="bills.html" class="nav-link">Bills</a>
+            <a href="customers.html" class="nav-link">Customers</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="inventory.html" class="nav-link">Products</a>
+            <a href="employees.html" class="nav-link">Employees</a>
+            <a href="payroll.html" class="nav-link">Payroll</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+        <!-- Page Actions -->
+        <nav class="nav-buttons">
+            <a href="customers.html" class="button">Add Customer</a>
+            <a href="#" class="button" onclick="showCreateInvoiceForm()">Create New Invoice</a>
+        </nav>
+
+        <main>
+            <!-- Create Invoice Modal -->
+            <div id="create-invoice-form" class="invoice-modal" style="display: none;">
+                <div class="invoice-modal-content">
+                    <h3>Create New Invoice</h3>
+                    <p class="helper-text-info"><strong>Tip:</strong> When you select a product and enter a quantity, the stock level will automatically decrease when the invoice is saved.</p>
+                    <form onsubmit="createInvoice(event)">
+                    
+                    <div class="form-two-columns">
+                        <div class="form-column-left">
+                            <div class="form-row">
+                                <label>Invoice Number:</label>
+                                <input type="text" id="invoiceNumber" class="form-input" placeholder="Leave blank to auto-generate">
+                            </div>
+                        
+                            <div class="form-row">
+                                <label>Customer:</label>
+                                <div class="autocomplete-wrapper">
+                                    <input type="text" 
+                                           id="invoiceCustomer" 
+                                           class="autocomplete-input" 
+                                           placeholder="Start typing customer name..."
+                                           autocomplete="off"
+                                           required>
+                                    <input type="hidden" id="invoiceCustomerId">
+                                    <div id="customerAutocompleteList" class="autocomplete-items"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Invoice Type:</label>
+                                <select id="invoiceType" required class="vendor-select">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Cash Delivery">Cash Delivery</option>
+                                    <option value="Charge">Charge</option>
+                                    <option value="Charge Delivery">Charge Delivery</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>PO Number:</label>
+                                <input type="text" id="invoicePONumber" class="form-input" placeholder="Enter PO Number (optional)">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Driver:</label>
+                                <div class="autocomplete-wrapper">
+                                    <input type="text" 
+                                           id="invoiceDriver" 
+                                           class="autocomplete-input" 
+                                           placeholder="Start typing driver name..."
+                                           autocomplete="off">
+                                    <input type="hidden" id="invoiceDriverId">
+                                    <div id="driverAutocompleteList" class="autocomplete-items"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-column-right">
+                            <div class="form-row">
+                                <label>Invoice Date:</label>
+                                <input type="date" id="invoiceDate" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Ordered Date:</label>
+                                <input type="date" id="invoiceOrderedDate">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Wanted Date:</label>
+                                <input type="date" id="invoiceWantedDate">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Ship Date:</label>
+                                <input type="date" id="invoiceShipDate">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label>Due Date:</label>
+                                <input type="date" id="invoiceDueDate" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="invoice-items">
+                        <h4>Line Items <span class="tooltip-icon" data-tooltip="Products will be deducted from inventory when invoice is saved">?</span></h4>
+                        <div class="invoice-item-header">
+                            <span>Part</span>
+                            <span>Ordered</span>
+                            <span>Backordered</span>
+                            <span>Price</span>
+                            <span></span>
+                        </div>
+                        <div class="invoice-item">
+                            <select class="item-product">
+                                <option value="">Select product...</option>
+                            </select>
+                            <input type="number" class="item-quantity-ordered" placeholder="Ordered" min="0" value="0">
+                            <input type="number" class="item-quantity-backordered" placeholder="Backordered" min="0" value="0">
+                            <input type="number" class="item-price" placeholder="Price" step="0.01">
+                            <button type="button" onclick="removeInvoiceItem(this)" class="remove-button">Remove</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="addInvoiceItem()" class="button add-item-button">Add Item</button>
+                    
+                    <div>
+                        <button type="submit" class="button">Create Invoice</button>
+                        <button type="button" class="button cancel" onclick="hideCreateInvoiceForm()">Cancel</button>
+                        <label class="generate-pdf-option">
+                            <input type="checkbox" id="generatePDFOnCreate" checked> 
+                            Generate PDF after creating invoice
+                        </label>
+                    </div>
+                </form>
+                </div>
+            </div>
+
+            <!-- Invoices Summary -->
+            <div id="invoices-summary" class="invoices-summary">
+                <h3>Invoices Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value due-week">$<span id="total-pending">0.00</span></div>
+                        <div>Total Pending</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value unpaid">$<span id="overdue-amount">0.00</span></div>
+                        <div>Overdue Amount</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value unpaid"><span id="overdue-invoices">0</span></div>
+                        <div>Overdue Invoices</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value paid">$<span id="paid-this-month">0.00</span></div>
+                        <div>Paid This Month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice List -->
+            <div id="invoice-list">
+                <h2>Invoice List</h2>
+                
+                <!-- Search Box -->
+                <div class="search-box">
+                    <input type="text" id="invoiceSearchInput" class="search-input" placeholder="Search invoices by customer, invoice #, or amount..." oninput="searchInvoices()">
+                    <span class="search-icon"></span>
+                    <button class="search-clear" id="invoiceSearchClear" onclick="clearInvoiceSearch()">×</button>
+                </div>
+                
+                <!-- Run Report Button -->
+                <div style="margin: 15px 0;">
+                    <button class="button button-primary" onclick="showInvoiceReportDialog()">Run Report</button>
+                </div>
+                
+                <div class="filter-buttons sort-buttons">
+                    <button class="button all" onclick="filterInvoices('all')">All</button>
+                    <button class="button overdue" onclick="filterInvoices('overdue')">Overdue</button>
+                    <button class="button paid" onclick="filterInvoices('paid')">Paid</button>
+                    <button class="button due-date" onclick="sortInvoicesByDueDate()">Sort by Due Date</button>
+                    <button class="button button-success" onclick="exportInvoicesToCSV()">Export CSV</button>
+                </div>
+                
+                <table class="table" id="invoices-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Customer</th>
+                            <th>Invoice Date</th>
+                            <th>Due Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoices-tbody">
+                        <!-- Invoices will be added here -->
+                    </tbody>
+                </table>
+                
+                <!-- Pagination Controls -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing <span id="invoice-start">0</span> to <span id="invoice-end">0</span> of <span id="invoice-total">0</span> invoices
+                    </div>
+                    <div class="pagination-controls">
+                        <label for="invoicePageSize">Show:</label>
+                        <select id="invoicePageSize" onchange="changeInvoicePageSize()">
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="all">All</option>
+                        </select>
+                        <button class="button button-small" onclick="previousInvoicePage()" id="invoice-prev-btn">Previous</button>
+                        <span id="invoice-page-info">Page 1 of 1</span>
+                        <button class="button button-small" onclick="nextInvoicePage()" id="invoice-next-btn">Next</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoice Report Dialog -->
+            <div id="invoice-report-dialog" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Generate Invoice Report</h3>
+                    <form onsubmit="generateInvoiceReport(event)">
+                        <div class="form-row">
+                            <label>Sort By:</label>
+                            <select id="reportSortBy" required class="vendor-select">
+                                <option value="invoiceDate">Invoice Date</option>
+                                <option value="dueDate">Due Date</option>
+                                <option value="paidDate">Payment Date</option>
+                                <option value="customer">Customer Name</option>
+                                <option value="total">Total Amount</option>
+                                <option value="status">Status</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Sort Order:</label>
+                            <select id="reportSortOrder" required class="vendor-select">
+                                <option value="asc">Ascending (A-Z, Oldest-Newest, Low-High)</option>
+                                <option value="desc">Descending (Z-A, Newest-Oldest, High-Low)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Filter by Status:</label>
+                            <select id="reportStatusFilter" class="vendor-select">
+                                <option value="all">All Statuses</option>
+                                <option value="Unpaid">Unpaid (Pending + Overdue)</option>
+                                <option value="Pending">Pending Only</option>
+                                <option value="Paid">Paid Only</option>
+                                <option value="Overdue">Overdue Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Filter by Customer:</label>
+                            <select id="reportCustomerFilter" class="vendor-select">
+                                <option value="all">All Customers</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Date Range:</label>
+                            <select id="reportDateRange" class="vendor-select" onchange="toggleCustomDateRange()">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div id="customDateRange" style="display: none;">
+                            <div class="form-row">
+                                <label>Start Date:</label>
+                                <input type="date" id="reportStartDate" class="description-input">
+                                
+                                <label>End Date:</label>
+                                <input type="date" id="reportEndDate" class="description-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <label>Report Format:</label>
+                            <select id="reportFormat" required class="vendor-select">
+                                <option value="csv">CSV (Excel)</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" class="button">Generate Report</button>
+                            <button type="button" class="button cancel" onclick="hideInvoiceReportDialog()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/export-utility.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/invoice-pdf-generator.js"></script>
+    <script src="../js/invoices.js"></script>
+    <script src="../js/keyboard-navigation.js"></script>
+</body>
+</html>

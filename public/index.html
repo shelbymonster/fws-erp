@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Simple ERP</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/auth-guard.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Simple ERP Dashboard</h1>
+            <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="quick-actions-section" style="max-width: 600px; margin: 40px auto;">
+            <h2>Main Menu</h2>
+            <div class="action-buttons">
+                <a href="views/invoices.html" class="button button-success">
+                    Manage Invoices
+                </a>
+                <a href="views/bills.html" class="button button-danger">
+                    Manage Bills
+                </a>
+                <a href="views/purchase-orders.html" class="button button-warning">
+                    Purchase Orders
+                </a>
+                <a href="views/customers.html" class="button button-primary">
+                    Customers
+                </a>
+                <a href="views/vendors.html" class="button button-purple">
+                    Vendors
+                </a>
+                <a href="views/inventory.html" class="button button-orange">
+                    Products
+                </a>
+                <a href="views/employees.html" class="button button-info">
+                    Employees
+                </a>
+                <a href="views/payroll.html" class="button button-teal">
+                    Payroll
+                </a>
+                <a href="views/reports.html" class="button button-secondary">
+                    Reports
+                </a>
+                <a href="views/settings.html" class="button button-dark">
+                    Settings
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simple ERP System</p>
+        </div>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
