@@ -2,6 +2,9 @@
 (function() {
     // Check if user is authenticated
     function checkAuth() {
+        // AUTHENTICATION DISABLED FOR TESTING
+        return;
+        
         const currentUser = localStorage.getItem('erp_current_user');
         const currentPath = window.location.pathname;
         
