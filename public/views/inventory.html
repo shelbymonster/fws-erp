@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory - Simple ERP</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="../js/auth-guard.js"></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>Product Management</h1>
+            <h1>Inventory Management</h1>
             <div id="user-info" style="position: absolute; top: 20px; right: 20px; color: white;"></div>
         </div>
     </header>
@@ -24,7 +25,7 @@
             <a href="bills.html" class="nav-link">Bills</a>
             <a href="customers.html" class="nav-link">Customers</a>
             <a href="vendors.html" class="nav-link">Vendors</a>
-            <a href="inventory.html" class="nav-link active">Products</a>
+            <a href="inventory.html" class="nav-link active">Inventory</a>
             <a href="employees.html" class="nav-link">Employees</a>
             <a href="payroll.html" class="nav-link">Payroll</a>
             <a href="reports.html" class="nav-link">Reports</a>
@@ -37,24 +38,32 @@
         </nav>
 
         <main>
-            <!-- Add Product Form -->
-            <div id="add-product-form" class="add-product-form">
-                <h3>Add New Product</h3>
-                <p class="helper-text-info"><strong>Tip:</strong> Choose "Physical Product" for items you track in inventory (stock levels change with purchases and sales). Choose "Service/Fee" for non-tangible items like delivery fees, installation charges, or warranty fees.</p>
-                <form onsubmit="addProduct(event)">
-                    <input type="text" id="productName" placeholder="Product Name" required class="product-form-input product-name-input">
-                    <br>
-                    <select id="productType" required class="product-form-input product-name-input" onchange="toggleStockField()">
-                        <option value="product">Physical Product (tracks stock)</option>
-                        <option value="service">Service/Fee (no stock tracking)</option>
-                    </select>
-                    <br>
-                    <input type="number" id="productPrice" placeholder="Price" step="0.01" required class="product-form-input product-price-input">
-                    <input type="number" id="productStock" placeholder="Stock Quantity" required class="product-form-input product-stock-input">
-                    <br>
-                    <button type="submit" class="button">Add Product</button>
-                    <button type="button" class="button button-danger" onclick="hideAddProductForm()">Cancel</button>
-                </form>
+            <!-- Add Product Modal -->
+            <div id="add-product-form" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>Add New Product</h3>
+                    <p class="helper-text-info"><strong>Tip:</strong> Choose "Physical Product" for items you track in inventory (stock levels change with purchases and sales). Choose "Service/Fee" for non-tangible items like delivery fees, installation charges, or warranty fees.</p>
+                    <form onsubmit="addProduct(event)">
+                        <input type="text" id="productName" placeholder="Product Name" required class="product-form-input product-name-input">
+                        <br>
+                        <input type="text" id="productPartNumber" placeholder="Part Number" required class="product-form-input product-name-input">
+                        <br>
+                        <input type="text" id="productUPC" placeholder="UPC Code (12 digits, optional)" maxlength="12" pattern="[0-9]{12}" class="product-form-input product-name-input">
+                        <br>
+                        <select id="productType" required class="product-form-input product-name-input" onchange="toggleStockField()">
+                            <option value="product">Physical Product (tracks stock)</option>
+                            <option value="service">Service/Fee (no stock tracking)</option>
+                        </select>
+                        <br>
+                        <input type="number" id="productPrice" placeholder="Price" step="0.01" required class="product-form-input product-price-input">
+                        <input type="number" id="productStock" placeholder="Stock Quantity (Optional)" class="product-form-input product-stock-input">
+                        <br>
+                        <textarea id="productDescription" placeholder="Description (Optional)" class="product-form-input product-name-input" rows="3"></textarea>
+                        <br>
+                        <button type="submit" class="button">Add Product</button>
+                        <button type="button" class="button cancel" onclick="hideAddProductForm()">Cancel</button>
+                    </form>
+                </div>
             </div>
 
             <!-- Product List -->
@@ -72,6 +81,8 @@
                     <thead>
                         <tr>
                             <th>Product Name</th>
+                            <th>Part Number</th>
+                            <th>UPC</th>
                             <th>Type</th>
                             <th>Price</th>
                             <th>Stock</th>

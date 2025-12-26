@@ -17,10 +17,14 @@ function displayProducts() {
         const stockValue = product.stock !== null && product.stock !== undefined ? product.stock : 0;
         const stockDisplay = productType === 'service' ? '—' : stockValue;
         const stockClass = productType === 'product' && stockValue < 10 ? 'low-stock' : '';
+        const partNumber = product.partNumber || '—';
+        const upc = product.upc || '—';
         
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${product.name}</td>
+            <td>${partNumber}</td>
+            <td>${upc}${product.upc ? ' <button class="button button-small" onclick="viewBarcode(' + product.id + ')">View Barcode</button>' : ''}</td>
             <td>${typeDisplay}</td>
             <td>$${product.price.toFixed(2)}</td>
             <td class="${stockClass}">${stockDisplay}</td>
@@ -37,18 +41,31 @@ function displayProducts() {
 
 // Show add product form
 function showAddProductForm() {
-    document.getElementById('add-product-form').style.display = 'block';
+    const modal = document.getElementById('add-product-form');
+    modal.style.display = 'flex';
     // Reset form
     document.getElementById('productType').value = 'product';
     toggleStockField();
+    
+    // Add click outside to close
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            hideAddProductForm();
+        }
+    };
 }
 
 // Hide add product form
 function hideAddProductForm() {
-    document.getElementById('add-product-form').style.display = 'none';
+    const modal = document.getElementById('add-product-form');
+    modal.style.display = 'none';
+    modal.onclick = null;
     document.getElementById('productName').value = '';
+    document.getElementById('productPartNumber').value = '';
+    document.getElementById('productUPC').value = '';
     document.getElementById('productPrice').value = '';
     document.getElementById('productStock').value = '';
+    document.getElementById('productDescription').value = '';
     document.getElementById('productType').value = 'product';
 }
 
@@ -76,15 +93,28 @@ function addProduct(event) {
     event.preventDefault();
     
     const name = document.getElementById('productName').value;
+    const partNumber = document.getElementById('productPartNumber').value.trim();
+    const upc = document.getElementById('productUPC').value.trim();
     const price = parseFloat(document.getElementById('productPrice').value);
     const type = document.getElementById('productType').value;
-    const stock = type === 'service' ? 0 : parseInt(document.getElementById('productStock').value);
+    const stockInput = document.getElementById('productStock').value;
+    const stock = type === 'service' ? 0 : (stockInput ? parseInt(stockInput) : 0);
+    const description = document.getElementById('productDescription').value.trim();
+    
+    // Validate UPC if provided
+    if (upc && upc.length !== 12) {
+        alert('UPC code must be exactly 12 digits');
+        return;
+    }
     
     const newProduct = {
         name: name,
+        partNumber: partNumber || '',
+        upc: upc || '',
         type: type,
         price: price,
-        stock: stock
+        stock: stock,
+        description: description || ''
     };
     
     if (erpStorage.addProduct(newProduct)) {
@@ -124,6 +154,18 @@ function editProduct(id) {
     const newName = prompt('Enter new name:', product.name);
     if (!newName) return;
     
+    const newPartNumber = prompt('Enter part number (leave blank if none):', product.partNumber || '');
+    if (newPartNumber === null) return;
+    
+    const newUPC = prompt('Enter UPC code (12 digits, leave blank if none):', product.upc || '');
+    if (newUPC === null) return;
+    
+    // Validate UPC if provided
+    if (newUPC.trim() && newUPC.trim().length !== 12) {
+        alert('UPC code must be exactly 12 digits');
+        return;
+    }
+    
     const newPrice = prompt('Enter new price:', product.price);
     if (!newPrice) return;
     
@@ -134,11 +176,17 @@ function editProduct(id) {
         newStock = parseInt(stockInput);
     }
     
+    const newDescription = prompt('Enter description (leave blank if none):', product.description || '');
+    if (newDescription === null) return;
+    
     const updatedData = {
         name: newName,
+        partNumber: newPartNumber.trim(),
+        upc: newUPC.trim(),
         type: productType,
         price: parseFloat(newPrice),
-        stock: newStock
+        stock: newStock,
+        description: newDescription.trim()
     };
     
     if (erpStorage.updateProduct(id, updatedData)) {
@@ -386,7 +434,76 @@ function exportProductsToJSON() {
     ExportUtility.exportToJSON(products, filename);
 }
 
+// View and print barcode
+function viewBarcode(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product || !product.upc) {
+        alert('No UPC code available for this product');
+        return;
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content" style="text-align: center; max-width: 500px;">
+            <h2>${product.name}</h2>
+            <p>Part Number: ${product.partNumber || 'N/A'}</p>
+            <p>UPC: ${product.upc}</p>
+            <svg id="barcode-svg"></svg>
+            <div style="margin-top: 20px;">
+                <button class="button button-primary" onclick="printBarcode()">Print Barcode</button>
+                <button class="button button-secondary" onclick="this.closest('.modal').remove()">Close</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Generate barcode - use CODE128 which works with any alphanumeric string
+    // UPC/EAN formats require valid check digits, so CODE128 is more reliable for general use
+    try {
+        JsBarcode("#barcode-svg", product.upc, {
+            format: "CODE128",
+            width: 2,
+            height: 100,
+            displayValue: true
+        });
+    } catch (error) {
+        alert('Error generating barcode: ' + (error.message || 'Unable to generate barcode'));
+        modal.remove();
+        return;
+    }
+    
+    // Close on background click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    };
+}
+
+function printBarcode() {
+    const printWindow = window.open('', '', 'height=400,width=600');
+    const barcodeContent = document.querySelector('#barcode-svg').outerHTML;
+    
+    printWindow.document.write('<html><head><title>Print Barcode</title>');
+    printWindow.document.write('<style>body { text-align: center; padding: 20px; }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(barcodeContent);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 250);
+}
+
 window.exportProductsToCSV = exportProductsToCSV;
 window.exportProductsToJSON = exportProductsToJSON;
+window.viewBarcode = viewBarcode;
+window.printBarcode = printBarcode;
 
 console.log('Product search functionality enabled');
